@@ -16,6 +16,7 @@ namespace rest_training.Controllers.Training
     {
         readonly Database _database;
         readonly IdGenerator _generator;
+
         public AttendeesController(Database database, IdGenerator generator)
         {
             _database = database;
@@ -25,8 +26,9 @@ namespace rest_training.Controllers.Training
         [HttpGet(Name = "GetAttendees")]
         public IActionResult Get()
         {
-
-            return Ok(_database.Attendees.Select(x => BuildRepresentation(x.Key, x.Value)));
+            return Ok(_database
+                .Attendees
+                .Select(x => BuildRepresentation(x.Key, x.Value)));
         }
 
         [HttpGet("{id}", Name = "GetAttendeeById")]

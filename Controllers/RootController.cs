@@ -15,8 +15,9 @@ namespace rest_training.Controllers
         {
             return Ok(new
             {
-                Title = "Welcome to this wonderful API. To register for the training, go to the training registration endpoint.",
-                Links = new[] {
+                Title = "Welcome to this wonderful API. To register for the training, go to the training endpoint.",
+                Links = new[]
+                {
                   new Link(Url.Link("GetTraining", null), "training")
                 },
             });

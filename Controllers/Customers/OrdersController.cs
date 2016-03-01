@@ -38,7 +38,10 @@ namespace rest_training.Controllers
             }
 
             var order = _database.Orders[id];
-            var customer = _database.Customers.FirstOrDefault(x => x.Key == order.CustomerId).Value;
+            var customer = _database
+                .Customers
+                .FirstOrDefault(x => x.Key == order.CustomerId)
+                .Value;
 
             return Ok(BuildRepresentation(id, order, customer));
         }
@@ -48,7 +51,10 @@ namespace rest_training.Controllers
         {
             _database.Orders[id] = order;
 
-            var customer = _database.Customers.FirstOrDefault(x => x.Key == order.CustomerId).Value;
+            var customer = _database
+                .Customers
+                .FirstOrDefault(x => x.Key == order.CustomerId)
+                .Value;
 
             return Ok(BuildRepresentation(id, order, customer));
         }
@@ -59,7 +65,10 @@ namespace rest_training.Controllers
             var id = _generator.GetNextIdFor(nameof(order));
 
             _database.Orders[id] = order;
-            var customer = _database.Customers.FirstOrDefault(x => x.Key == order.CustomerId).Value;
+            var customer = _database
+                .Customers
+                .FirstOrDefault(x => x.Key == order.CustomerId)
+                .Value;
             
 
             return CreatedAtRoute("GetOrderById", new { id }, BuildRepresentation(id, order, customer));
@@ -87,21 +96,6 @@ namespace rest_training.Controllers
             _database.Orders.Remove(id);
 
             return Ok();
-        }
-
-        [HttpPatch("{id}")]
-        public IActionResult Patch(int id, [FromBody]JsonPatchDocument<Order> path)
-        {
-            if (!_database.Orders.ContainsKey(id))
-            {
-                return HttpNotFound();
-            }
-            var order = _database.Orders[id];
-            path.ApplyTo(order);
-
-            var customer = _database.Customers.FirstOrDefault(x => x.Key == order.CustomerId).Value;
-
-            return Ok(BuildRepresentation(id, order, customer));
         }
 
         private dynamic BuildRepresentation(int id, Order order, Customer customer)

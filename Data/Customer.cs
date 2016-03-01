@@ -9,6 +9,8 @@ namespace rest_training.Data
     {
         public string Name { get; set; }
         public string Address { get; set; }
+
+        public List<string> Contacts { get; set; } = new List<string>();
     }
     
 }

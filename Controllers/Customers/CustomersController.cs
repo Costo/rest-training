@@ -26,7 +26,9 @@ namespace rest_training.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_database.Customers.Select(x => BuildRepresentation(x.Key, x.Value, null)));
+            return Ok(_database
+                .Customers
+                .Select(x => BuildRepresentation(x.Key, x.Value, null)));
         }
 
         [HttpGet("{id}", Name = "GetCustomerById")]
@@ -36,7 +38,10 @@ namespace rest_training.Controllers
             {
                 return HttpNotFound();
             }
-            var orders = _database.Orders.Where(x => x.Value.CustomerId == id).ToArray();
+            var orders = _database
+                .Orders
+                .Where(x => x.Value.CustomerId == id)
+                .ToArray();
 
             return Ok(BuildRepresentation(id, _database.Customers[id], orders));
         }
@@ -46,7 +51,10 @@ namespace rest_training.Controllers
         {
             _database.Customers[id] = customer;
 
-            var orders = _database.Orders.Where(x => x.Value.CustomerId == id).ToArray();
+            var orders = _database
+                .Orders
+                .Where(x => x.Value.CustomerId == id)
+                .ToArray();
 
             return Ok(BuildRepresentation(id, customer, orders));
         }
@@ -94,7 +102,10 @@ namespace rest_training.Controllers
             }
             patch.ApplyTo(_database.Customers[id]);
 
-            var orders = _database.Orders.Where(x => x.Value.CustomerId == id).ToArray();
+            var orders = _database
+                .Orders
+                .Where(x => x.Value.CustomerId == id)
+                .ToArray();
 
             return Ok(BuildRepresentation(id, _database.Customers[id], orders));
         }
@@ -105,6 +116,7 @@ namespace rest_training.Controllers
 
             result.Name = customer.Name;
             result.Address = customer.Address;
+            result.Contacts = customer.Contacts;
             result.Links = new[]
             {
                 new Link(Url.Link("GetCustomerById", new { id }), "self"),
@@ -112,7 +124,9 @@ namespace rest_training.Controllers
 
             if (orders != null)
             {
-                result.Orders = orders.Select(x => BuildRepresentation(x.Key, x.Value)).ToArray();
+                result.Orders = orders
+                    .Select(x => BuildRepresentation(x.Key, x.Value))
+                    .ToArray();
             }
 
             return result;
