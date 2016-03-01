@@ -1,5 +1,4 @@
 ﻿using rest_training.Data;
-using rest_training.Models;
 using Swashbuckle.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -8,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace rest_training.SwaggerGen
 {
-    public class CustomerModelFilter : IModelFilter
+    public class AttendeeModelFilter : IModelFilter
     {
         public void Apply(Schema model, ModelFilterContext context)
         {
-            if (context.SystemType == typeof(Customer))
+            if (context.SystemType == typeof(Attendee))
             {
                 model.Example = new
                 {
-                    Name = "Apcurium",
-                    Address = "7250 Mile End"
+                    Name = "Your Name",
                 };
             }
         }

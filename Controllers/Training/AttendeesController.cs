@@ -91,9 +91,9 @@ namespace rest_training.Controllers.Training
             return Ok();
         }
 
-        public dynamic BuildRepresentation(int id, Attendee data)
+        private dynamic BuildRepresentation(int id, Attendee data)
         {
-            var result = (dynamic)new ExpandoObject();
+            dynamic result = new ExpandoObject();
             result.Name = data.Name;
             result.RegistrationDate = data.RegistrationDate;
             result.Links = new[]

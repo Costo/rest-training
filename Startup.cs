@@ -50,6 +50,7 @@ namespace rest_training
                 o.ModelFilter<PatchFilter>();
                 o.ModelFilter<OrderModelFilter>();
                 o.ModelFilter<CustomerModelFilter>();
+                o.ModelFilter<AttendeeModelFilter>();
 
             });
 

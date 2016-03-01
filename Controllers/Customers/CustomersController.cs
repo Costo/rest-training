@@ -36,26 +36,28 @@ namespace rest_training.Controllers
             {
                 return HttpNotFound();
             }
-            return Ok(_database.Customers[id]);
+            var orders = _database.Orders.Where(x => x.Value.CustomerId == id).ToArray();
+
+            return Ok(BuildRepresentation(id, _database.Customers[id], orders));
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]Customer customer)
         {
-            customer.Id = id;
-            Customers[id] = customer;
+            _database.Customers[id] = customer;
 
-            return Ok(customer);
+            var orders = _database.Orders.Where(x => x.Value.CustomerId == id).ToArray();
+
+            return Ok(BuildRepresentation(id, customer, orders));
         }
 
         [HttpPost]
         public IActionResult Post([FromBody]Customer customer)
         {
-            var id = GetNextCustomerId();
-            customer.Id = id;
-            Customers[id] = customer;
+            var id = _generator.GetNextIdFor(nameof(customer));
+            _database.Customers[id] = customer;
 
-            return CreatedAtRoute("GetCustomerById", new { id }, customer);
+            return CreatedAtRoute("GetCustomerById", new { id }, BuildRepresentation(id, customer, null));
         }
 
         [HttpDelete()]
@@ -65,7 +67,8 @@ namespace rest_training.Controllers
             {
                 return new HttpStatusCodeResult((int)HttpStatusCode.Forbidden);
             }
-            Customers.Clear();
+
+            _database.Customers.Clear();
 
             return Ok();
         }
@@ -73,11 +76,11 @@ namespace rest_training.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            if (!Customers.ContainsKey(id))
+            if (!_database.Customers.ContainsKey(id))
             {
                 return HttpNotFound();
             }
-            Customers.Remove(id);
+            _database.Customers.Remove(id);
 
             return Ok();
         }
@@ -85,18 +88,20 @@ namespace rest_training.Controllers
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, [FromBody]JsonPatchDocument<Customer> patch)
         {
-            if (!Customers.ContainsKey(id))
+            if (!_database.Customers.ContainsKey(id))
             {
                 return HttpNotFound();
             }
-            patch.ApplyTo(Customers[id]);
+            patch.ApplyTo(_database.Customers[id]);
 
-            return Ok(Customers[id]);
+            var orders = _database.Orders.Where(x => x.Value.CustomerId == id).ToArray();
+
+            return Ok(BuildRepresentation(id, _database.Customers[id], orders));
         }
 
         private dynamic BuildRepresentation(int id, Customer customer, KeyValuePair<int, Order>[] orders)
         {
-            var result = (dynamic)new ExpandoObject();
+            dynamic result = new ExpandoObject();
 
             result.Name = customer.Name;
             result.Address = customer.Address;
@@ -115,7 +120,7 @@ namespace rest_training.Controllers
 
         private dynamic BuildRepresentation(int id, Order order)
         {
-            var result = (dynamic)new ExpandoObject();
+            dynamic result = new ExpandoObject();
 
             result.Lines = order.Lines;
             result.Link = new[]

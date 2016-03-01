@@ -1,4 +1,5 @@
-﻿using rest_training.Models;
+﻿using rest_training.Data;
+using rest_training.Models;
 using Swashbuckle.SwaggerGen;
 using System;
 using System.Collections.Generic;

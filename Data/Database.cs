@@ -11,5 +11,6 @@ namespace rest_training.Data
         public IDictionary<int, Attendee> Attendees { get; } = new Dictionary<int, Attendee>();
         public IDictionary<int, Customer> Customers { get; } = new Dictionary<int, Customer>();
         public IDictionary<int, Order> Orders { get; } = new Dictionary<int, Order>();
+
     }
 }
